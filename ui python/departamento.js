@@ -187,6 +187,7 @@ methods:{
 
         this.departamentos=this.DepartamentoSinFiltro.filter(
             function(el){
+                console.log(el.DepartamentoId.toString())
                 return el.DepartamentoId.toString().toLowerCase().includes(
                     DepartamentoFiltroId.toString().trim().toLowerCase()
                 )&&

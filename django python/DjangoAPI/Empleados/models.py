@@ -1,5 +1,5 @@
-from distutils.command.upload import upload
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator 
 
 # Create your models here.
 
@@ -16,9 +16,9 @@ class Empleado(models.Model):
 
 class Sueldo(models.Model):
     Empleado = models.OneToOneField(Empleado, on_delete=models.CASCADE,primary_key=True)
-    SueldoBase = models.PositiveBigIntegerField()
-    Descuentos = models.PositiveBigIntegerField()
-    Bonificaciones = models.PositiveBigIntegerField()
-    SueldoLiquido = models.PositiveBigIntegerField()
+    SueldoBase = models.PositiveBigIntegerField(validators=[MinValueValidator(100000), MaxValueValidator(100000000)])
+    Descuentos = models.PositiveBigIntegerField(validators=[MinValueValidator(2000), MaxValueValidator(500000)])
+    Bonificaciones = models.PositiveBigIntegerField(validators=[MinValueValidator(2000), MaxValueValidator(500000)])
+    SueldoLiquido = models.PositiveBigIntegerField(validators=[MinValueValidator(100000), MaxValueValidator(100000000)])
     
     

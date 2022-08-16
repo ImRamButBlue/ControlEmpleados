@@ -92,7 +92,7 @@ def sueldoApi(request):
             sueldo_serializer.save()
             return JsonResponse("Se ha modificado el sueldo",safe=False)
         else:
-            return JsonResponse("Hubo un problema al modificar el sueldo:"+sueldo_serializer.is_valid(raise_exception=True),safe=False)
+            return JsonResponse("Hubo un problema al modificar el sueldo:"+str(sueldo_serializer.errors),safe=False)
     elif request.method=='DELETE':
         sueldo = Sueldo.objects.get(Empleado=id)
         sueldo.delete()

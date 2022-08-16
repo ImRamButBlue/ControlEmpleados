@@ -10,6 +10,10 @@ class DepartamentoSerializer(serializers.ModelSerializer):
         fields=('DepartamentoId','DepartamentoNombre')
 
 class EmpleadoSerializer(serializers.ModelSerializer):
+    EmpleadoNombre = serializers.CharField(min_length=4,max_length=256)
+    Departamento = serializers.CharField(min_length=2,max_length=256)
+    FechaIngreso = serializers.DateField()
+    FotoEmpleado = serializers.CharField(min_length=2,max_length=256)
     class Meta:
         model=Empleado
         fields=('EmpleadoId','EmpleadoNombre','Departamento','FechaIngreso','FotoEmpleado')
