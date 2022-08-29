@@ -49,7 +49,7 @@ def empleadoApi(request,id=0):
         if empleado_serializer.is_valid():
             empleado_serializer.save()
             return JsonResponse("Añadido satisfactoriamente",safe=False)
-        return JsonResponse("Fallo al añadir",safe=False)
+        return JsonResponse("Fallo al añadir"+str((empleado_serializer.errors)),safe=False)
     elif request.method=='PUT':
         empleado_data=JSONParser().parse(request)
         empleado= Empleado.objects.get(EmpleadoId=empleado_data['EmpleadoId'])
@@ -70,7 +70,7 @@ def GuardarArchivo(request):
     return JsonResponse(file_name,safe=False)
 
 @csrf_exempt
-def sueldoApi(request):
+def sueldoApi(request,id=0):
     if request.method=='GET':
         sueldo = Sueldo.objects.all()
         sueldo_serializer= SueldoSerializer(sueldo,many=True)

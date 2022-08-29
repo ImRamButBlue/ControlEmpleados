@@ -1,6 +1,5 @@
-const sueldo = {template:
-`
-<div>
+<template>
+    <div>
 
 <button type="button" 
 class="btn btn-primary m-2 float-end"
@@ -14,7 +13,28 @@ data-bs-target="#modalVista"
 <thead>
     <tr>
         <th>
-        <div class="d-flex flex-row">
+            <div class="d-flex flex-row">
+            <input class="form-control m-2"
+                v-model="SueldoFiltroId"
+                v-on:keyup="FiltroFuncion()"
+                placeholder="Filtro Por ID">
+                <button type="button" class="btn btn-light"
+                @click="ordenarResultado('SueldoId',true)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
+                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                </svg>
+                </button>
+                <button type="button" class="btn btn-light"
+                @click="ordenarResultado('SueldoId',false)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+                </svg>
+                </button>
+            </div>
+            Empleado ID
+        </th>
+        <th>
+            <div class="d-flex flex-row">
             <input class="form-control m-2"
                 v-model="SueldoFiltroNombre"
                 v-on:keyup="FiltroFuncion()"
@@ -32,10 +52,6 @@ data-bs-target="#modalVista"
                 </svg>
                 </button>
             </div>
-            Empleado Nombre
-        </th>
-        <th>
-            
             Sueldo Base
         </th>
         <th>
@@ -52,14 +68,14 @@ data-bs-target="#modalVista"
         </th>
     </tr>
 </thead>
-<tbody v-for="sue in sueldos">
-    <tr v-for="emp in empleados">
-        <td v-if="sue.Empleado==emp.EmpleadoId">{{emp.EmpleadoNombre}}</td>
-        <td v-if="sue.Empleado==emp.EmpleadoId">{{sue.SueldoBase}}</td>
-        <td v-if="sue.Empleado==emp.EmpleadoId">{{sue.Descuentos}}</td>
-        <td v-if="sue.Empleado==emp.EmpleadoId">{{sue.Bonificaciones}}</td>
-        <td v-if="sue.Empleado==emp.EmpleadoId">{{sue.SueldoLiquido}}</td> 
-        <td v-if="sue.Empleado==emp.EmpleadoId">
+<tbody>
+    <tr v-for="sue in sueldos" :key="sue">
+        <td>{{sue.Empleado}}</td>
+        <td>{{sue.SueldoBase}}</td>
+        <td>{{sue.Descuentos}}</td>
+        <td>{{sue.Bonificaciones}}</td>
+        <td>{{sue.SueldoLiquido}}</td> 
+        <td>
             <button
             class="btn btn-light mr-1"
             data-bs-toggle="modal"
@@ -71,7 +87,7 @@ data-bs-target="#modalVista"
                 </svg>
             </button>
         </td>
-        <td v-if="sue.Empleado==emp.EmpleadoId">
+        <td>
             <button class="btn btn-light mr-1" @click="borrarClick(sue.SueldoId)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -81,7 +97,6 @@ data-bs-target="#modalVista"
         </td>
     </tr>
 </tbody>
-</thead>
 
 </table>
 
@@ -101,7 +116,7 @@ data-bs-target="#modalVista"
         <div class="input-group mb-3" >
             <span class="input-group-text">Empleado Nombre</span>
             <select class="form-select" v-model="Empleado">
-                <option v-bind:value="emp.EmpleadoId" v-for="emp in empleados" >
+                <option v-bind:value="emp.EmpleadoId" v-for="emp in empleados" :key="emp">
                     {{emp.EmpleadoNombre}}
                 </option>
             </select>
@@ -137,10 +152,15 @@ data-bs-target="#modalVista"
 
 </div>
 </div>
-
 </div>
-`,
-data(){
+</div>
+</template>
+<script>
+    import Constantes from '../constant'
+    import axios from 'axios';
+    export default {
+        name:'ListadoSueldos',
+        data(){
     return{
         sueldos:[],
         empleados:[],
@@ -152,23 +172,20 @@ data(){
         Empleado:0,
         EmpleadoFiltrado:"",
         EmpleadosSinFiltro:[],
-        SueldoSinFiltro:[],
         SueldoFiltroId:0,
         EmpleadoId:0
     }
 },
 methods:{
     refreshData(){
-        axios.get(variables.API_URL+"sueldo")
+        axios.get(Constantes.API_URL+"sueldo")
         .then((response)=>{
             this.sueldos=response.data;
-            this.SueldoSinFiltro = response.data;
         });
-        axios.get(variables.API_URL+"empleado")
+        axios.get(Constantes.API_URL+"empleado")
         .then((response)=>{
             this.empleados=response.data;
-            
-            this.EmpleadosSinFiltro = response.data;
+            this.EmpleadoSinFiltro = response.data;
         });
     },
     agregarClick(){
@@ -191,7 +208,7 @@ methods:{
         this.EmpleadoId=sue.Empleado;
     },
     crearClick(){
-        axios.post(variables.API_URL+"sueldo",{
+        axios.post(Constantes.API_URL+"sueldo",{
             SueldoBase:this.SueldoBase,
             Descuentos:this.Descuentos,
             Bonificaciones:this.Bonificaciones,
@@ -205,7 +222,7 @@ methods:{
         });
     },
     actualizarClick(){
-        axios.put(variables.API_URL+"sueldo",{
+        axios.put(Constantes.API_URL+"sueldo",{
             SueldoBase:this.SueldoBase,
             Descuentos:this.Descuentos,
             Bonificaciones:this.Bonificaciones,
@@ -222,7 +239,7 @@ methods:{
         {
             return;
         }
-        axios.delete(variables.API_URL+"sueldo/"+id)
+        axios.delete(Constantes.API_URL+"sueldo/"+id)
         .then((response)=>{
             this.refreshData();
             alert(response.data);
@@ -234,39 +251,10 @@ methods:{
                 id.toString().trim().toLowerCase()
             )
         });
-    },
-    FiltroFuncion(){
-        var SueldoFiltroNombre=this.SueldoFiltroNombre;
-        var EmpleadoFiltrado;
-        var empleadosEntran;
-
-
-        EmpleadoFiltrado = this.EmpleadosSinFiltro.filter(
-            el =>{
-                  return el.EmpleadoNombre.toString().toLowerCase().includes(
-                    SueldoFiltroNombre.toString().trim().toLowerCase()
-            );
-        });
-        empleadosEntran = EmpleadoFiltrado;
-        var listaEntran = [];
-
-        var recorrerArray = (arr) => {
-            for(let i=0;i<=arr.length-1;i++){
-                listaEntran.push(arr[i].EmpleadoId);
-            }
-        }
-        recorrerArray(EmpleadoFiltrado)
-
-        let filtroEmp = listaEntran.map(item => {return item;});
-
-        this.sueldos = this.SueldoSinFiltro.filter(
-            el => {
-                return filtroEmp.includes(el.Empleado);
-        });
     }
 },
 mounted:function(){
     this.refreshData();
 }
-
 }
+</script>

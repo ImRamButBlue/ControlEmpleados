@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-bnj_0b8dwh@a4nsg*mtonykj@b(lm0273p#*!n!mk(lzd*9v+)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -86,10 +86,10 @@ WSGI_APPLICATION = 'DjangoAPI.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'MiPrueba',
+        'NAME': 'EmpleadosDB',
         'USER' : 'my_user',
         'PASSWORD' : 'MySuperPassword',
-        'HOST': 'localhost',
+        'HOST': '192.168.1.11',
         'PORT': '5432'
     }
 }

@@ -1,1 +1,0 @@
-const home = {template:`<h1>Estamos en el home</h1>`}
